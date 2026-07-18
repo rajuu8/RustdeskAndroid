@@ -1,0 +1,23 @@
+name: Build APK Clean
+on: [workflow_dispatch]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    # Is project me flutter folder hai, isliye subfolder me check karega
+    - name: Run Build
+      run: |
+        if [ -d "flutter/android" ]; then
+          cd flutter/android
+        elif [ -d "android" ]; then
+          cd android
+        fi
+        chmod +x gradlew
+        ./gradlew assembleDebug
+        
+    - uses: actions/upload-artifact@v4
+      with:
+        name: RemoteControlAPK
+        path: "**/build/outputs/apk/debug/*.apk"
