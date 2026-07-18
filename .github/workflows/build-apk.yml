@@ -3,18 +3,17 @@ on: [workflow_dispatch]
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write # Ye line automatic push karne ki permission degi
     steps:
     - uses: actions/checkout@v4
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }} # Isse authentication error nahi aayega
     - uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
-    - run: chmod +x gradlew && ./gradlew assembleDebug
+    - name: Clean Build
+      run: |
+        chmod +x gradlew
+        ./gradlew assembleDebug
     - uses: actions/upload-artifact@v4
       with:
         name: MyAPK
-        path: app/build/outputs/apk/debug/*.apk
+        path: "**/build/outputs/apk/debug/*.apk"
